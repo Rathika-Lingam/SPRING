@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+                          
+   	<on-start>
+		  <evaluate expression="userHandler.initFlow()" result="flowScope.bs"/>
+	</on-start>
+ 
+	<!-- view-state is the start state of the flow -->
+	
+	<view-state id="start" view="billingdetails" model="flowScope.bs">  <!-- bs is the modelAttribute name -->
+	   <transition on="submit" to="address"/>
+	</view-state>
+
+	
+ <!--action state executes a particular action,then flow moves to the corresponding view state -->
+ 
+	 <action-state id="address">
+		<evaluate expression="userHandler.address(bs)"></evaluate>
+		<transition on="success" to="confirmDetails" />
+		<transition on="failure" to="start" />
+	</action-state> 
+ 
+	<view-state id="confirmDetails" view="confirmDetails" model="flowScope.bs">
+		<transition on="edit" to="start" />
+		<transition on="submit" to="payment" />
+	</view-state>
+ 
+	<end-state id="payment" view="payment" />
+	<end-state id="toHome" view="index" />
+	
+	<!-- these events are available in every state-->
+ 	<global-transitions> 
+ 		<transition on="home" to="toHome" /> 
+ 	</global-transitions>
+</flow>
+    
